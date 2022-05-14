@@ -1,0 +1,50 @@
+---
+name: Buld Image
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+
+  build_images:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        extra_packages:
+          -
+          - gcc
+        python_version:
+          - 3.7
+          - 3.8
+          - 3.9
+          - "3.10"
+    steps:
+      - uses: actions/checkout@v3
+      - name: build
+        env:
+          DOCKER_BUILDKIT: 1
+        run: |
+          set -x
+          POETRY_VERSION=$(echo ${{ github.ref }} | sed 's|refs/tags/||')
+          TAG=py${{ matrix.python_version }}
+
+          if [ ${{ matrix.extra_packages }} ]
+          then
+            TAG=$TAG-$(echo ${{ matrix.extra_packages }} | tr ' ' -)
+          fi
+
+          docker build . \
+            --build-arg PYTHON_VERSION=${{ matrix.python_version }} \
+            --build-arg EXTRA_PACKAGES=${{ matrix.extra_packages }} \
+            --build-arg POETRY_VERSION=$POETRY_VERSION \
+            --tag aogier/python-poetry:$TAG
+
+          docker tag \
+            aogier/python-poetry:$TAG \
+            aogier/python-poetry:$POETRY_VERSION-$TAG
+
+          docker login -u aogier -p ${{ secrets.DOCKER_TOKEN }}
+
+          docker push aogier/python-poetry:$TAG
+          docker push aogier/python-poetry:$POETRY_VERSION-$TAG
