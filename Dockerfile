@@ -6,7 +6,8 @@ ARG POETRY_VERSION
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 # hadolint ignore=DL3008,DL3015
-RUN set -x; apt-get update \
+RUN set -x \
+    && apt-get update \
     && apt-get install -y \
         curl \
         $EXTRA_PACKAGES \
