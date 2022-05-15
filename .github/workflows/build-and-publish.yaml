@@ -56,7 +56,7 @@ jobs:
           then
             ADDITIONAL_TAGS="\
               $ADDITIONAL_TAGS \
-              $TAG.$REVISION \
+              $TAG-$REVISION \
               $POETRY_VERSION-$TAG-$REVISION"
           fi
           for additional_tag in $ADDITIONAL_TAGS; do
