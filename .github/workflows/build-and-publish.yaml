@@ -27,9 +27,10 @@ jobs:
           DOCKER_BUILDKIT: 1
         run: |
           set -x
-          echo ${{ github.ref }} \
-            | sed 's|refs/tags/||; s/-/ /' \
-            | read -r POETRY_VERSION REVISION
+          read -r POETRY_VERSION REVISION <<< $(
+            echo ${{ github.ref }} \
+              | sed 's|refs/tags/||; s/-/ /'
+          )
           TAG=py${{ matrix.python_version }}
 
           if [ ${{ matrix.extra_packages }} ]
