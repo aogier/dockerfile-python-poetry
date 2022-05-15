@@ -18,3 +18,5 @@ RUN set -x \
     && apt-get autoremove -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
+
+ENV PATH=/root/.poetry/bin:$PATH
