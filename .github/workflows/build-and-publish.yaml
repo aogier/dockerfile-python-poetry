@@ -19,6 +19,9 @@ jobs:
           - 3.8
           - 3.9
           - "3.10"
+        image_variant:
+          - ''
+          - alpine
     steps:
       - uses: actions/checkout@v3
       - name: build
@@ -42,7 +45,13 @@ jobs:
               done | tr ' ' -)
           fi
 
-          docker build . \
+          if [ ${{ matrix.image_variant }} ]
+          then
+            TAG=$TAG-${{ matrix.image_variant }}
+            DOCKERFILE='-f Dockerfile.${{ matrix.image_variant }}'
+          fi
+
+          docker build . $DOCKERFILE \
             --build-arg PYTHON_VERSION=${{ matrix.python_version }} \
             --build-arg EXTRA_PACKAGES=${{ matrix.extra_packages }} \
             --build-arg POETRY_VERSION=$POETRY_VERSION \

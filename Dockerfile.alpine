@@ -1,0 +1,19 @@
+ARG PYTHON_VERSION=3.10
+FROM python:${PYTHON_VERSION}-alpine
+
+ARG EXTRA_PACKAGES
+ARG POETRY_VERSION=master
+
+#SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+# hadolint ignore=DL3008,DL3015
+RUN set -x ;\
+    apk add --no-cache --virtual \
+        deps \
+        curl \
+        $EXTRA_PACKAGES \
+    && curl \
+        -sSL https://raw.githubusercontent.com/python-poetry/poetry/$POETRY_VERSION/get-poetry.py \
+        | python - \
+    && apk del deps
+
+ENV PATH=/root/.poetry/bin:$PATH
