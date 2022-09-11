@@ -12,6 +12,7 @@ RUN set -x ;\
         curl \
         musl-dev \
         gcc \
+        libffi-dev \
     && apk add $EXTRA_PACKAGES \
     && curl \
         -sSL https://install.python-poetry.org \
