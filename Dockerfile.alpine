@@ -10,7 +10,9 @@ RUN set -x ;\
     apk add --no-cache --virtual \
         deps \
         curl \
-        $EXTRA_PACKAGES \
+        musl-dev \
+        gcc \
+    && apk add $EXTRA_PACKAGES \
     && curl \
         -sSL https://install.python-poetry.org \
         | python - --version=$POETRY_VERSION \
