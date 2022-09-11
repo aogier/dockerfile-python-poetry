@@ -12,11 +12,11 @@ RUN set -x \
         curl \
         $EXTRA_PACKAGES \
     && curl \
-        -sSL https://raw.githubusercontent.com/python-poetry/poetry/$POETRY_VERSION/get-poetry.py \
-        | python - \
+        -sSL https://install.python-poetry.org \
+        | python - --version=$POETRY_VERSION \
     && apt-get remove -y curl \
     && apt-get autoremove -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-ENV PATH=/root/.poetry/bin:$PATH
+ENV PATH=/root/.local/bin:$PATH
