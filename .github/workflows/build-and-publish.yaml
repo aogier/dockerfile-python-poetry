@@ -1,9 +1,7 @@
 ---
 name: Buld Image
 on:
-  push:
-    tags:
-      - '*'
+  push: {}
 
 env:
   image_name: aogier/python-poetry
@@ -84,9 +82,9 @@ jobs:
 
           done
 
-          for tag_to_push in $(echo $tags_to_push)
+          for tag_to_push in $tags_to_push
           do
 
-            docker push $tag_to_push
+            echo docker push $tag_to_push
 
           done
