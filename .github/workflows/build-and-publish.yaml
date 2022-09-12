@@ -58,13 +58,14 @@ jobs:
           fi
 
           base_tag=${{ env.image_name }}:$TAG
-          tags_to_push=$base_tag
 
           docker build . $DOCKERFILE \
             --build-arg PYTHON_VERSION=${{ matrix.python_version }} \
             --build-arg EXTRA_PACKAGES=${{ matrix.extra_packages }} \
             --build-arg POETRY_VERSION=$POETRY_VERSION \
             --tag $base_tag
+
+          docker push $base_tag &
 
           ADDITIONAL_TAGS=$POETRY_VERSION-$TAG
           if [ $REVISION ]
@@ -75,18 +76,16 @@ jobs:
               $POETRY_VERSION-$TAG-$REVISION"
           fi
           for additional_tag in $ADDITIONAL_TAGS; do
-
             docker tag \
               $base_tag \
               ${{ env.image_name }}:$additional_tag
 
             tags_to_push="$tags_to_push ${{ env.image_name }}:$additional_tag"
-
           done
+          wait
 
           for tag_to_push in $tags_to_push
           do
-
-            docker push $tag_to_push
-
+            docker push $tag_to_push &
           done
+          wait
