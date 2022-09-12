@@ -1,7 +1,9 @@
 ---
 name: Buld Image
 on:
-  push: {}
+  push:
+    tags:
+      - '*'
 
 env:
   image_name: aogier/python-poetry
@@ -14,12 +16,12 @@ jobs:
       matrix:
         extra_packages:
           - ''
-          - gcc
+          # - gcc
         python_version:
           - 3.7
-          - 3.8
-          - 3.9
-          - "3.10"
+          # - 3.8
+          # - 3.9
+          # - "3.10"
         image_variant:
           - ''
           - alpine
