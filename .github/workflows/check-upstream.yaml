@@ -28,6 +28,9 @@ jobs:
         run: |
           set -x
 
+          # fetch tags
+          git fetch --tags
+
           # get latest tag from upstream
           latest=$(
               gh api repos/python-poetry/poetry/releases/latest \
@@ -40,28 +43,19 @@ jobs:
 
           echo latest is $latest, mine is $current
 
-
           # if no latest on current tip then tag it, bumping tag revision
           # if needed. That will trigger build-and-publish workflow
 
           if ! echo $current | grep $latest; then
 
               latest_revision=$(\
-                gh api repos/aogier/dockerfile-python-poetry/git/refs/tags \
-                | jq -r \
-                    --arg latest "refs/tags/$latest" \
-                    '
-                      .[]
-                      | select( .ref | startswith($latest))
-                      | .ref
-                      | sub("^" + $latest + "-(?<rev>.*)$"; "\(.rev)")
-                    ' \
-                | sort -nt. -k1,1 -k2,2 -k3,3 \
-                | tail -1
+                git tag --list "$latest-*" --sort=taggerdate \
+                | tail --lines 1 \
+                | cut --delimiter - --fields 2 \
               )
 
               # increment last revision
-              new_revision=$(echo $latest_revision + 1 | bc)
+              new_revision=$(echo ${latest_revision:-0} + 1 | bc)
 
               new_tag="$latest-$new_revision"
               git tag "$new_tag"
