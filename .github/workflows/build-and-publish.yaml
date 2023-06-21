@@ -17,6 +17,8 @@ jobs:
         extra_packages:
           - ''
           - gcc
+          - gcc git
+          - git
         python_version:
           - 3.7
           - 3.8
