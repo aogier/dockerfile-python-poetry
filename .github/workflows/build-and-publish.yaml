@@ -64,7 +64,7 @@ jobs:
 
           docker build . $DOCKERFILE \
             --build-arg PYTHON_VERSION=${{ matrix.python_version }} \
-            --build-arg EXTRA_PACKAGES=${{ matrix.extra_packages }} \
+            --build-arg EXTRA_PACKAGES='${{ matrix.extra_packages }}' \
             --build-arg POETRY_VERSION=$POETRY_VERSION \
             --tag $base_tag
 
